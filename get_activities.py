@@ -1,3 +1,5 @@
+# This is deprecated as it's obsolete, use get_activities_2 as it's more efficient
+
 # Prereq: Python 3 (sudo apt install python3)
 #		  Python3-pip (sudo apt install python3-pip)
 # 		  Python3 requests (sudo pip3 install requests)
