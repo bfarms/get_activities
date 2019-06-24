@@ -61,8 +61,7 @@ def main():
 		geoms_df['stroke'][i] = '#00FF00' # change all stroke values to green first
 
 	df3 = df2[(~df2['Task Status'].str.match('Complete')) & (~df2['Task Status'].str.contains('Discarded'))].reset_index() # removes all complete (doesn't remove 'Partially Complete') and discarded tasks, resets index to start from 0 again with new dataframe (use in dfs where rows were gotten from other dfs)
-
-	for i in range(len(df3['Percentage'])):
+	for i in range(len(df3['Percentage'])): # using df3['Percentage'] because it takes less time since there's less items (already changed all stroke to green [complete] first, so this just changes things that need to be changed from green to yellow
 		if float(df3['Percentage'][i]) >= 15.00:
 			try:
 				location_in_geoms_df = geoms_df['field_name'].where(geoms_df['field_name'] == df3['Field Name'][i]).dropna().keys()[0] # gets index of CSV file where the field name is
@@ -77,6 +76,30 @@ def main():
 			#	color = '#D7DF01' # change to dark yellow if partially complete (considering this to be a form of in-progress)
 			#else:
 			#	color = '#848484' # change to gray if nothing else
+
+	#geoms_temp_df = pand.DataFrame() # to be appended to geoms_df, gives the task status breakdown (percentages)
+	#for i in range(len(geoms_df['stroke'])): # need to preallocate dataframe with all 0.00, with the same amount of rows that geoms_df has
+	#	temp_dict = { 'Complete': [0.00], 'To-Do': [0.00], 'In Progress': [0.00], 'Partially Complete': [0.00] }
+	#	geoms_temp_df = geoms_temp_df.append(pand.DataFrame(data=temp_dict, columns=['Complete', 'To-Do', 'In Progress', 'Partially Complete']), ignore_index=True)
+
+	#for i in range(len(geoms_df['stroke'])):
+	#	try:
+	#		location_in_df2 = df2['Field Name'].where(df2['Field Name'] == geoms_df['field_name'][i]).dropna().keys() # gets array of indices of where the field is (as each row is an individial task status for that field)
+	#		for j in range(len(location_in_df2)):
+	#			try:
+	#				#print(df2['Field Name'][([location_in_df2][j])])
+	#				print(geoms_df['field_name'].where(geoms_df['field_name'][i] == df2['Field Name'][ ([location_in_df2][j])]).dropna())
+	#				location_in_geoms_df = geoms_df['field_name'].where(geoms_df['field_name'] == df2['Field Name'][ ([location_in_df2][j]) ]).dropna().keys()[0] # gets index of CSV file where the field name is, to write to geoms_temp_df (as merging them requires that the indices stay the same)
+	#				print(location_in_geoms_df)
+	#				geoms_temp_df[ df2 ['Task Status'] [([loction_in_df2][j])] ][location_in_geoms_df] = df2['Percentage'][ ([location_in_df2][j]) ]
+
+					#geoms_temp_df[df2['Task Status'][([location_in_df2][j])]][location_in_geoms_df] = df2['Percentage'][([location_in_df2][j])] # hard to read, but for instance, it's geoms_temp_df['Complete'][location_in_geoms] =
+	#			except:
+	#				continue
+	#			except:
+	#		continue
+	#print (geoms_temp_df)
+
 	geoms_df.to_csv(geomsCSVfilename, index=False)
 	print("Done.")
 	# -- End -- #
